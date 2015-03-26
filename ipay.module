@@ -1,0 +1,235 @@
+<?php
+/**
+ * Implements hook_field_info().
+ */
+function ipay_field_info() {
+  return array(
+    'ipay_sku_item' => array(
+      'label' => 'Ipay - Reservar',
+      'description' => t('This field stores and renders ipay.com code.'),
+      'default_widget' => 'ipay_textfield',
+      'default_formatter' => 'ipay_default',
+      'property_type' => 'text',
+    ),
+  );
+}
+
+/**
+* Implements hook_menu().
+*/
+function ipay_menu()
+{
+  $items = array();
+  $items['admin/config/content/ipay'] = array(
+  'title' => t('Ipay'),
+  'description' => t('Configure the ipay module. (Paypal)'),
+  'page callback' => 'drupal_get_form',
+  'page arguments' => array('ipay_admin'),
+  'access arguments' => array('administer ipay settings'),
+  'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+/**
+ * Implements hook_field_validate().
+ *
+ * Possible error codes:
+ * - 'ipay_invalid': The ipay code is not valid
+ */
+function ipay_field_validate($obj_type, $object, $field, $instance, $langcode, $items, &$errors) {
+  foreach ($items as $delta => $item) {
+    if (strlen($item['ipay_sku_item']) != 6 ) {
+      $message = t('"%code" is not a valid. Ipay code is 6D', array('%code' => $item['ipay_sku_item']));
+      $errors[$field['field_name']][$langcode][$delta][] = array(
+        'error' => "ipay_invalid",
+        'message' => $message,
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_field_widget_error().
+ */
+function ipay_field_widget_error($element, $error, $form, &$form_state) {
+  form_error($element, $error['message']);
+}
+
+/**
+ * Implements hook_content_is_empty().
+ */
+function ipay_field_is_empty($item, $field) {
+  if (empty($item['ipay_sku_item'])) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ *
+ */
+function ipay_field_formatter_info() {
+  $formats = array(
+    'ipay_default' => array(
+      'label' => t('Default Ipay link'),
+      'description' => t('Display the ipay.com code as a link.'),
+      'field types' => array('ipay_sku_item'),
+    ),
+    'ipay_button' => array(
+      'label' => t('Ipay button'),
+      'description' => t('Display a ipay.com code as a Button.'),
+      'field types' => array('ipay_sku_item'),
+    ),
+    'ipay_form' => array(
+      'label' => t('Ipay Form'),
+      'description' => t('Display ipay.com code in form.'),
+      'field types' => array('ipay_sku_item'),
+    ),
+    'ipay_plain' => array(
+      'label' => t('Ipay Plain Text'),
+      'description' => t('Display ipay.com code plain text.'),
+      'field types' => array('ipay_sku_item'),
+    ),
+  );
+  return $formats;
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function ipay_field_formatter_view($object_type, $object, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  $url = variable_get('ipay_url', 1);
+  // print_r(node_load(6));
+  switch ($display['type']) {
+    case 'ipay_default':
+      foreach ($items as $delta => $item)
+      {
+        $output ='<div id="ipay-block-1" class="ipay-block"><p><a href="'.$url."/".$item['ipay_sku_item'].'" class="form-submit">Pagar con paypal</a></p></div>';
+        $element[$delta] = array('#markup' => $output);
+      }
+      break;
+
+    case 'ipay_button':
+      $ids = entity_extract_ids($object_type, $object);
+      foreach ($items as $delta => $item) {
+        $output = '<formmethod="post"><input type="hidden" name="_code" value="84" ><input  type="hidden" name="tour" value="'.$item['ipay_sku_item'].'" class="form-submit"><input  type="submit" value="Pagar con paypal" class="form-submit"></form>';
+        $output = '<div id="ipay-block-1" class="ipay-block">
+       <form method="post" action="'.$url.'reservar/" id="ipay-form" class="ipay-form">
+       <input  type="hidden" name="tour" value="'.$item['ipay_sku_item'].'" class="form-submit">
+            <div class="ipay-field ipay-personas">
+               <label>Nro de Personas: </label>
+               <select class="ipay-field" name="nro_personas">
+                   <option value="1">1 Viajero</option>
+                   <option value="2">2 Viajeros</option>
+                   <option value="3">3 Viajeros</option>
+                   <option value="4">4 Viajeros</option>
+                   <option value="5">5 Viajeros</option>
+                   <option value="6">6 Viajeros</option>
+                   <option value="7">7 Viajeros</option>
+                   <option value="8">8 Viajeros</option>
+                   <option value="9">9 Viajeros</option>
+                   <option value="10">10 Viajeros</option>
+               </select>
+            </div>
+           <div class="ipay-field ipay-submit">
+            <input type="submit" name="pagar" class="form-submit" value="Pagar" >
+           </div>
+       </form>
+   </div>';
+        $element[$delta] = array('#markup' => $output);
+        break;
+      }
+      break;
+
+    case 'ipay_form':
+      $ids = entity_extract_ids($object_type, $object);
+      foreach ($items as $delta => $item) {
+        $output = '<form action="'.$url.'reservar/" method="post"><input type="hidden" name="_code" value="84" ><input  type="submit" value="'.$item['ipay_sku_item'].'" class="form-submit"></form>';
+        $element[$delta] = array('#markup' => $output);
+        break;
+      }
+      break;
+
+    case 'ipay_plain':
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array('#markup' => check_plain($item['ipay_sku_item']));
+      }
+      break;
+  }
+  return $element;
+}
+
+
+/**
+ * Implements hook_field_widget_info().
+ */
+function ipay_field_widget_info() {
+  return array(
+    'ipay_sku_item_textfield' => array(
+      'label' => t('Text field'),
+      'field types' => array('ipay_sku_item'),
+      'settings' => array('size' => 60),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_widget_settings_form().
+ */
+function ipay_field_widget_settings_form($field, $instance) {
+  $widget = $instance['widget'];
+  $settings = $widget['settings'];
+
+  $form['size'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Size of textfield'),
+    '#default_value' => $settings['size'],
+    '#required' => TRUE,
+    '#element_validate' => array('_element_validate_integer_positive'),
+  );
+  return $form;
+}
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function ipay_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $base) {
+  $element = $base;
+  $element['ipay_sku_item'] = $base + array(
+    '#type' => 'textfield',
+    '#default_value' => isset($items[$delta]['ipay_sku_item']) ? $items[$delta]['ipay_sku_item'] : NULL,
+    '#size' => $instance['widget']['settings']['size'],
+    '#prefix' => '<div class="text-full-wrapper">',
+    '#suffix' => '</div>',
+  );
+  return $element;
+}
+/**
+* Permisos
+*/
+function ipay_permission()
+{
+  return array(
+    'administer ipay settings' => array(
+    'title' => t('Administer ipay configurations'),
+    'restrict access' => true,
+    )
+  );
+}
+function ipay_admin()
+{
+  $form = array();
+  // Configurar URL
+  $form['ipay_url'] = array(
+  '#type' => 'textfield',
+  '#title' => t('URL'),
+  '#default_value' => variable_get('ipay_url', ""),
+  '#size' => 60,
+  '#maxlength' => 250,
+  '#description' => t("URL para reservar"),
+  '#required' => TRUE,
+  );
+  return system_settings_form($form);
+}
