@@ -1,0 +1,22 @@
+<?php
+
+
+/**
+ * @file
+ * Defines schema for ipay.com code fields
+ */
+
+/**
+ * Implements hook_field_schema().
+ */
+function ipay_field_schema($field) {
+  return array(
+    'columns' => array(
+      'ipay_sku_item' => array(
+        'type' => 'varchar',
+         'length' => 100,
+         'not null' => FALSE,
+      ),
+    ),
+  );
+}
