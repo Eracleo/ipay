@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+   <html>
+   <head>
+       <title>Forms - Ipay - paViajar.com</title>
+       <style type="text/css">
+       .ipay-block{
+        border: 3px solid #CCC;
+        background: #EEE;
+        padding: 5px;
+        min-width: 150px;
+        max-width: 250px;
+       }
+       </style>
+   </head>
+   <body>
+   <p>Generar un link</p>
+   <div id="ipay-block-1" class="ipay-block">
+       <p><a href="" class="form-submit">Pagar con paypal</a></p>
+   </div>
+   <p>Generar un formulario con campo para el numero de personas.</p>
+   <div id="ipay-block-1" class="ipay-block">
+       <form method="post" action="" id="ipay-form" class="ipay-form">
+            <div class="ipay-field ipay-personas">
+               <label>Nro de Personas: </label>
+               <select class="ipay-field" name="nro_personas">
+                   <option value="1">1 Viajero</option>
+                   <option value="2">2 Viajeros</option>
+                   <option value="3">3 Viajeros</option>
+                   <option value="4">4 Viajeros</option>
+                   <option value="5">5 Viajeros</option>
+                   <option value="6">6 Viajeros</option>
+                   <option value="7">7 Viajeros</option>
+                   <option value="8">8 Viajeros</option>
+                   <option value="9">9 Viajeros</option>
+                   <option value="10">10 Viajeros</option>
+               </select>
+            </div>
+           <div class="ipay-field ipay-submit">
+            <input type="submit" name="pagar" class="form-submit" value="Pagar" >
+           </div>
+       </form>
+   </div>
+   <p>Formulario con fecha</p>
+   <div id="ipay-block-2" class="ipay-block">
+       <form method="post" action="" id="ipay-form" class="ipay-form">
+            <div class="ipay-field ipay-personas">
+               <label>Nro de Personas: </label>
+               <select class="ipay-field" name="nro_personas">
+                   <option value="1">1 Viajero</option>
+                   <option value="2">2 Viajeros</option>
+                   <option value="3">3 Viajeros</option>
+                   <option value="4">4 Viajeros</option>
+                   <option value="5">5 Viajeros</option>
+                   <option value="6">6 Viajeros</option>
+                   <option value="7">7 Viajeros</option>
+                   <option value="8">8 Viajeros</option>
+                   <option value="9">9 Viajeros</option>
+                   <option value="10">10 Viajeros</option>
+               </select>
+            </div>
+           <div class="ipay-field ipay-fecha">
+                <label>Fecha Viaje: </label>
+               <input type="date" >
+           </div>
+           <div class="ipay-field ipay-submit">
+            <input type="submit" name="pagar" class="form-submit" value="Pagar" >
+           </div>
+       </form>
+   </div>
+<p>Formulario con fecha y correo</p>
+   <div id="ipay-block-3" class="ipay-block">
+       <form method="post" action="" id="ipay-form" class="ipay-form">
+            <div class="ipay-field ipay-personas">
+               <label>Nro de Personas: </label>
+               <select class="ipay-field" name="nro_personas">
+                   <option value="1">1 Viajero</option>
+                   <option value="2">2 Viajeros</option>
+                   <option value="3">3 Viajeros</option>
+                   <option value="4">4 Viajeros</option>
+                   <option value="5">5 Viajeros</option>
+                   <option value="6">6 Viajeros</option>
+                   <option value="7">7 Viajeros</option>
+                   <option value="8">8 Viajeros</option>
+                   <option value="9">9 Viajeros</option>
+                   <option value="10">10 Viajeros</option>
+               </select>
+            </div>
+           <div class="ipay-field ipay-fecha">
+                <label>Fecha Viaje: </label>
+               <input type="text" name="fecha_viaje" >
+           </div>
+           <div class="ipay-field ipay-fecha">
+                <label>E-mail: </label>
+               <input type="email" name="email" >
+           </div>
+           <div class="ipay-field ipay-submit">
+            <input type="submit" name="pagar" class="form-submit" value="Pagar" >
+           </div>
+       </form>
+   </div>
+   </body>
+   </html>
