@@ -121,7 +121,7 @@ function ipay_field_formatter_view($object_type, $object, $field, $instance, $la
       foreach ($items as $delta => $item) {
         $output = '<formmethod="post"><input type="hidden" name="_code" value="84" ><input  type="hidden" name="tour" value="'.$item['ipay_sku_item'].'" class="form-submit"><input  type="submit" value="Pagar con paypal" class="form-submit"></form>';
         $output = '<div id="ipay-block-1" class="ipay-block">
-       <form method="post" action="'.$url.'" id="ipay-form" class="ipay-form">
+       <form method="get" action="'.$url.$item['ipay_sku_item'].'" id="ipay-form" class="ipay-form">
        <input  type="hidden" name="tour" value="'.$item['ipay_sku_item'].'" class="form-submit">
             <div class="ipay-field ipay-personas">
                <label>Nro de Personas: </label>
