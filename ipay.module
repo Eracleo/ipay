@@ -37,13 +37,18 @@ function ipay_menu()
  * - 'ipay_invalid': The ipay code is not valid
  */
 function ipay_field_validate($obj_type, $object, $field, $instance, $langcode, $items, &$errors) {
-  foreach ($items as $delta => $item) {
-    if (strlen($item['ipay_sku_item']) != 6 ) {
-      $message = t('"%code" is not a valid. Ipay code is 6D', array('%code' => $item['ipay_sku_item']));
-      $errors[$field['field_name']][$langcode][$delta][] = array(
-        'error' => "ipay_invalid",
-        'message' => $message,
-      );
+  foreach ($items as $delta => $item)
+  {
+    if(strlen($item['ipay_sku_item']) != 0)
+    {
+      if (strlen($item['ipay_sku_item']) != 6 )
+      {
+        $message = t('"%code" is not a valid. Ipay code is 6D', array('%code' => $item['ipay_sku_item']));
+        $errors[$field['field_name']][$langcode][$delta][] = array(
+          'error' => "ipay_invalid",
+          'message' => $message,
+        );
+      }
     }
   }
 }
@@ -59,7 +64,8 @@ function ipay_field_widget_error($element, $error, $form, &$form_state) {
  * Implements hook_content_is_empty().
  */
 function ipay_field_is_empty($item, $field) {
-  if (empty($item['ipay_sku_item'])) {
+  if (empty($item['ipay_sku_item']))
+  {
     return TRUE;
   }
   return FALSE;
@@ -93,15 +99,6 @@ function ipay_field_formatter_info() {
     ),
   );
   return $formats;
-}
-/**
- * Implements hook_content_is_empty().
- */
-function ipay_field_is_empty($item, $field) {
-  if (empty($item['ipay_sku_item'])) {
-    return TRUE;
-  }
-  return FALSE;
 }
 /**
  * Implements hook_field_formatter_view().
