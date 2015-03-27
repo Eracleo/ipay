@@ -94,7 +94,15 @@ function ipay_field_formatter_info() {
   );
   return $formats;
 }
-
+/**
+ * Implements hook_content_is_empty().
+ */
+function ipay_field_is_empty($item, $field) {
+  if (empty($item['ipay_sku_item'])) {
+    return TRUE;
+  }
+  return FALSE;
+}
 /**
  * Implements hook_field_formatter_view().
  */
@@ -116,7 +124,7 @@ function ipay_field_formatter_view($object_type, $object, $field, $instance, $la
       foreach ($items as $delta => $item) {
         $output = '<formmethod="post"><input type="hidden" name="_code" value="84" ><input  type="hidden" name="tour" value="'.$item['ipay_sku_item'].'" class="form-submit"><input  type="submit" value="Pagar con paypal" class="form-submit"></form>';
         $output = '<div id="ipay-block-1" class="ipay-block">
-       <form method="post" action="'.$url.'reservar/" id="ipay-form" class="ipay-form">
+       <form method="post" action="'.$url.'" id="ipay-form" class="ipay-form">
        <input  type="hidden" name="tour" value="'.$item['ipay_sku_item'].'" class="form-submit">
             <div class="ipay-field ipay-personas">
                <label>Nro de Personas: </label>
@@ -146,8 +154,7 @@ function ipay_field_formatter_view($object_type, $object, $field, $instance, $la
     case 'ipay_form':
       $ids = entity_extract_ids($object_type, $object);
       foreach ($items as $delta => $item) {
-        $output = '<form action="'.$url.'reservar/" method="post"><input type="hidden" name="_code" value="84" ><input  type="submit" value="'.$item['ipay_sku_item'].'" class="form-submit"></form>';
-        $element[$delta] = array('#markup' => $output);
+        $element[$delta] = array('#markup' => check_plain($item['ipay_sku_item']));
         break;
       }
       break;
@@ -228,8 +235,12 @@ function ipay_admin()
   '#default_value' => variable_get('ipay_url', ""),
   '#size' => 60,
   '#maxlength' => 250,
-  '#description' => t("URL para reservar"),
+  '#description' => t("URL en el que tiene que realizarse el pago. (ejemplo: http://negotu.com/reservar/paquete/)"),
   '#required' => TRUE,
   );
   return system_settings_form($form);
+}
+function ipay_uninstall()
+{
+  variable_del('ipay_url');
 }
